@@ -1,5 +1,5 @@
 name: riverpod_demo
-description: "A new Flutter project. which demonstraite riverpod based reel scrolling application."
+description: "A new Flutter project. which demonstrate riverpod based reel scrolling application."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -39,6 +39,7 @@ dependencies:
   responsive_sizer: ^3.3.1
   cached_network_image: ^3.4.1
   shimmer: ^3.0.0
+  riverpod_annotation: ^4.0.2
 
 dev_dependencies:
   flutter_test:
@@ -50,6 +51,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+  build_runner: ^2.13.1
+  riverpod_generator: ^4.0.3
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

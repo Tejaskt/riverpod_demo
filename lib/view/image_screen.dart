@@ -13,7 +13,6 @@ class ImageScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return DefaultTabController(
       length: AppStrings.category.length,
       child: Scaffold(
@@ -31,66 +30,84 @@ class ImageScreen extends StatelessWidget {
           ),
         ),
         body: TabBarView(
-          children: AppStrings.category.map((e) => Consumer(builder: (context, ref, child) {
-            return ref.watch(imageProvider(e)).
-            when(data: (images) {
-              return ListView.builder(
-                itemCount: images.length,
-                itemBuilder: (context, index) {
-                  final image = images[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 4),
-                    child: Container(
-                      margin: .only(bottom: 8),
-                      decoration: BoxDecoration(
-                        color: hexToColor(image.avgColor),
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 8.0,
-                          horizontal: 16,
-                        ),
-                        child: Column(
-                          spacing: 8,
-                          children: [
-                            Text(
-                              "${image.caption}",
-                              style: AppFonts.txtNormal.copyWith(
-                                color: AppColors.white,
-                              ),
-                            ),
+          children: AppStrings.category
+              .map(
+                (e) => Consumer(
+                  builder: (context, ref, child) {
+                    return ref
+                        .watch(fetchImageProvider(e))
+                        .when(
+                          data: (images) {
+                            return ListView.builder(
+                              itemCount: images.length,
+                              itemBuilder: (context, index) {
+                                final image = images[index];
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 4,
+                                  ),
+                                  child: Container(
+                                    margin: .only(bottom: 8),
+                                    decoration: BoxDecoration(
+                                      color: hexToColor(image.avgColor),
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(10),
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 8.0,
+                                        horizontal: 16,
+                                      ),
+                                      child: Column(
+                                        spacing: 8,
+                                        children: [
+                                          Text(
+                                            "${image.caption}",
+                                            style: AppFonts.txtNormal.copyWith(
+                                              color: AppColors.white,
+                                            ),
+                                          ),
 
-                            CachedNetworkImage(
-                              height: 180,
-                              width: .infinity,
-                              imageUrl: image.imageUrl,
-                              fit: .contain,
-                              placeholder: (_, _) => ShimmerEffect(),
-                              fadeInDuration: Duration(milliseconds: 0),
-                              fadeOutDuration: Duration(milliseconds: 0),
-                            ),
+                                          CachedNetworkImage(
+                                            height: 180,
+                                            width: .infinity,
+                                            imageUrl: image.imageUrl,
+                                            fit: .contain,
+                                            placeholder: (_, _) =>
+                                                ShimmerEffect(),
+                                            fadeInDuration: Duration(
+                                              milliseconds: 0,
+                                            ),
+                                            fadeOutDuration: Duration(
+                                              milliseconds: 0,
+                                            ),
+                                          ),
 
-                            Text(
-                              '@${image.photographer}',
-                              textAlign: .right,
-                              style: AppFonts.txtNormal.copyWith(
-                                color: AppColors.white,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              );
-            },
-                error: (error, stackTrace) => Center(child: Text(error.toString())),
-                loading: () => Center(child: ShimmerEffect())
-            );
-          },),).toList()
-
+                                          Text(
+                                            '@${image.photographer}',
+                                            textAlign: .right,
+                                            style: AppFonts.txtNormal.copyWith(
+                                              color: AppColors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          error: (error, stackTrace) =>
+                              Center(child: Text(error.toString())),
+                          loading: () => Center(child: ShimmerEffect()),
+                        );
+                  },
+                ),
+              )
+              .toList(),
         ),
       ),
     );

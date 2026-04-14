@@ -6,13 +6,14 @@ class ImageService {
   const ImageService(this._dio);
   final Dio _dio;
 
-  Future<List<ImageModel>> fetchImages(String category) async{
+  Future<List<ImageModel>> fetchImages(String category, int page) async{
     try{
       final response = await _dio.get(
           'search',
           queryParameters: {
             'query' : category,
             'per_page' : 15,
+            'page' : page
           }
       );
 
