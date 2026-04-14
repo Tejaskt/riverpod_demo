@@ -11,7 +11,7 @@ class ImageService {
       final response = await _dio.get(
           'search',
           queryParameters: {
-            'query' : 'nature',
+            'query' : 'laptop',
             'per_page' : 15,
           }
       );

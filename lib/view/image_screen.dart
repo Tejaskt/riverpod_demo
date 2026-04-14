@@ -1,42 +1,75 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_demo/api/model/image_model.dart';
-import 'package:riverpod_demo/api/service/image_service.dart';
-import 'package:riverpod_demo/provider/dio_provider.dart';
+import 'package:riverpod_demo/core/utils/hex_to_color.dart';
+import 'package:riverpod_demo/provider/image_provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../core/component/shimmer_effect.dart';
 
-class ImageScreen extends ConsumerStatefulWidget {
+class ImageScreen extends ConsumerWidget {
   const ImageScreen({super.key});
 
   @override
-  ConsumerState createState() => _ImageScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final images = ref.watch(imageProvider);
 
-class _ImageScreenState extends ConsumerState<ImageScreen> {
-
-  Future<List<ImageModel>> get fetchImages => ImageService(ref.watch(dioProvider)).fetchImages();
-
-  @override
-  Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       appBar: AppBar(
-        title: Text('Images'),
+         centerTitle: true,
+          title: Text('Images'),
+        backgroundColor: Colors.blueAccent,
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            ListView.builder(
-              itemCount: 4,
-              itemBuilder: (context, index){
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Card(
-                    child: Text(''),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical : 8.0, horizontal: 16.0),
+        child: images.when(
+          data: (images) {
+            return ListView.builder(
+              itemCount: images.length,
+              itemBuilder: (context, index) {
+                final image = images[index];
+                return Container(
+                  margin: .only(bottom: 8),
+                  decoration: BoxDecoration(
+                    color: hexToColor(image.avgColor),
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 8.0,
+                      horizontal: 16,
+                    ),
+                    child: Column(
+                      spacing: 8,
+                      crossAxisAlignment: .start,
+                      children: [
+                        Text(
+                          'User : @${image.photographer}',
+                          style: TextStyle(color: Colors.white),
+                        ),
+
+                        CachedNetworkImage(
+                          height: 180,
+                          width: .infinity,
+                          imageUrl: image.imageUrl,
+                          fit: .contain,
+                          placeholder: (_, _) => ShimmerEffect(),
+                          fadeInDuration: Duration(milliseconds: 0),
+                          fadeOutDuration: Duration(milliseconds: 0),
+                        ),
+
+                        Text(
+                          "Caption : ${image.caption}",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
-            )
-          ],
-        )
+            );
+          },
+          error: (error, stackTrace) => Center(child: Text(error.toString())),
+          loading: () => Center(child: ShimmerEffect()),
+        ),
       ),
     );
   }
