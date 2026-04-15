@@ -30,6 +30,7 @@ class ImagePagination extends _$ImagePagination {
   Future<void> loadMore(String category) async {
     if (!_hasMore || state.isLoading) return;
 
+    // ignore: invalid_use_of_internal_member
     state = AsyncLoading<List<ImageModel>>().copyWithPrevious(state);
 
     _page++;

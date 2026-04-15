@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_demo/core/component/native_service.dart';
 import 'package:riverpod_demo/core/utils/hex_to_color.dart';
 import 'package:riverpod_demo/provider/image_pagination.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -44,6 +45,11 @@ class _ImageScreenState extends ConsumerState<ImageScreen> {
       length: AppStrings.category.length,
       child: Scaffold(
         appBar: AppBar(
+          actions: [
+            IconButton(onPressed: () {
+              NativeService.callKotlinMethod(context);
+            }, icon: Icon(Icons.get_app))
+          ],
           centerTitle: true,
           title: Text(AppStrings.appbarHeading, style: AppFonts.txtHeading),
           backgroundColor: Colors.deepPurple.shade100,
@@ -65,60 +71,55 @@ class _ImageScreenState extends ConsumerState<ImageScreen> {
                 return state.when(
                   data: (images) {
                     return ListView.builder(
+                      padding: EdgeInsets.all(16),
                       controller: controllers[e],
                       itemCount: images.length + 1,
                       itemBuilder: (context, index) {
                         if (index < images.length) {
                           final image = images[index];
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 4,
-                            ),
-                            child: Container(
-                              margin: .only(bottom: 8),
-                              decoration: BoxDecoration(
-                                color: hexToColor(image.avgColor),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(10),
-                                ),
+                          return Container(
+                            margin: .only(bottom: 8),
+                            decoration: BoxDecoration(
+                              color: hexToColor(image.avgColor),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0,
-                                  horizontal: 16,
-                                ),
-                                child: Column(
-                                  spacing: 8,
-                                  children: [
-                                    Text(
-                                      "${image.caption}",
-                                      style: AppFonts.txtNormal.copyWith(
-                                        color: AppColors.white,
-                                      ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 8.0,
+                                horizontal: 16,
+                              ),
+                              child: Column(
+                                spacing: 8,
+                                children: [
+                                  Text(
+                                    "${image.caption}",
+                                    style: AppFonts.txtNormal.copyWith(
+                                      color: AppColors.white,
                                     ),
+                                  ),
 
-                                    CachedNetworkImage(
-                                      height: 180,
-                                      width: .infinity,
-                                      imageUrl: image.imageUrl,
-                                      fit: .contain,
-                                      placeholder: (_, _) => ShimmerEffect(),
-                                      fadeInDuration: Duration(milliseconds: 0),
-                                      fadeOutDuration: Duration(
-                                        milliseconds: 0,
-                                      ),
+                                  CachedNetworkImage(
+                                    height: 180,
+                                    width: .infinity,
+                                    imageUrl: image.imageUrl,
+                                    fit: .contain,
+                                    placeholder: (_, _) => ShimmerEffect(),
+                                    fadeInDuration: Duration(milliseconds: 0),
+                                    fadeOutDuration: Duration(
+                                      milliseconds: 0,
                                     ),
+                                  ),
 
-                                    Text(
-                                      '@${image.photographer}',
-                                      textAlign: .right,
-                                      style: AppFonts.txtNormal.copyWith(
-                                        color: AppColors.white,
-                                      ),
+                                  Text(
+                                    '@${image.photographer}',
+                                    textAlign: .right,
+                                    style: AppFonts.txtNormal.copyWith(
+                                      color: AppColors.white,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                           );
