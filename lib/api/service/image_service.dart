@@ -6,7 +6,7 @@ class ImageService {
   const ImageService(this._dio);
   final Dio _dio;
 
-  Future<List<ImageModel>> fetchImages(String category, int page) async{
+  Future<List<ImageModel>> fetchImages(String category, {int page = 1}) async{
     try{
       final response = await _dio.get(
           'search',
